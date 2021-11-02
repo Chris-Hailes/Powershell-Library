@@ -43,11 +43,15 @@ Function Send-Notification($EmailSubject,$EmailBody)
 }
 
 $logsummary = (Get-Content $logfile | Select -Last 14) -join "<br />"
-$logerrors = (Get-Content $logfile | Select-String -Pattern "ERROR" -SimpleMatch) -join "<br />"
+$logerrors = (Get-Content $logfile | Select-String -Pattern "ERROR: RETRY LIMIT EXCEEDED" -SimpleMatch) -join "<br />"
+
+#Only Email me if there are errors in the log file
+IF ($logerrors -eq $null){
 $EmailBody += "Summary <br /> $($logsummary) <br />"
 $EmailBody += "Time Taken: $($TimeTaken) Minutes <br />"
 $EmailBody += "Error Paths <br /> $($logerrors) <br /> <br />"
 
-$EmailSubject = "Robocopy Report"
+$EmailSubject = "Robocopy Report - ERRORS"
 
 Send-Notification $EmailSubject $EmailBody
+}
