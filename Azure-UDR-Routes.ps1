@@ -30,7 +30,7 @@ Set-AzContext -Subscription $udr.Subscription
 $RouteTable = Get-AzRouteTable -Name $udr.RouteTable
 
 Write-Host NextHopIP = $udr.NextHopIP -ForegroundColor Green
-Add-AzRouteConfig -Name $udr.RouteName -AddressPrefix $udr.RTAddressPrefix -NextHopType $udr.RTDestination -NextHopIpAddress $udr.NextHopIP -RouteTable $RouteTable
+Add-AzRouteConfig -Name $udr.RouteName -AddressPrefix $udr.RTAddressPrefix -NextHopType $udr.RTDestination -NextHopIpAddress $udr.NextHopIP -RouteTable $RouteTable -ErrorAction SilentlyContinue
 
 Set-AzRouteTable -RouteTable $RouteTable
 }
