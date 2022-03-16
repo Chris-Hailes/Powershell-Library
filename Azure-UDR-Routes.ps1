@@ -25,7 +25,34 @@ Param (
 )
 
 foreach ($udr in $udrfile){
-Set-AzContext -Subscription $udr.Subscription
+
+    #! Login with Connect-AzAccount if NOT using Cloud Shell
+#! Check Azure Connection
+Try {
+    Write-Verbose "Connecting to Azure Cloud..."
+    If ($null -eq (Get-AzContext)){
+        Connect-AzAccount -ErrorAction Stop -WarningAction SilentlyContinue | Out-Null
+    }
+}
+Catch {
+    Write-Warning "Cannot connect to Azure Cloud. Please check your credentials. Exiting!"
+    Break
+}
+
+#! Set Azure Subscription Context
+Try {
+    Write-Verbose "Checking current Azure Context"
+    $AzCon = Get-AzContext
+    If ($AzCon.Name -ne $Subscription){
+        Write-Verbose "Setting Azure Context - Subscription Name: $Subscription"
+        $azSub = Get-AzSubscription -SubscriptionName $Subscription
+        Set-AzContext $azSub.id | Out-Null
+    }    
+}
+Catch {
+    Write-Warning "Cannot set Azure context. Please check your Azure subscription name. Exiting!"
+    Break
+}
 
 $RouteTable = Get-AzRouteTable -Name $udr.RouteTable
 
