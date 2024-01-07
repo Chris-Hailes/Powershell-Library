@@ -1,0 +1,1 @@
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power" /t REG_DWORD /v "LidNotifyReliable" /d 0x00000000 /f
